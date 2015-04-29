@@ -80,4 +80,6 @@
                                                       :pretty-print  false}}}}}}
   :ring {:handler fusure.core/app}
 
+  :main        fusure.core
+
   :jvm-opts ["-XX:-OmitStackTraceInFastThrow"])
