@@ -52,34 +52,35 @@
                  :optimizations :none
                  :pretty-print  true}}}}
 
-  :profiles {:dev     {:repl-options {:timeout 600000}
+  :profiles {:dev        {:repl-options {:timeout 600000}
 
-                       :env          {:is-dev    true
-                                      :http-port "4000"}
+                          :env          {:is-dev    true
+                                         :http-port "4000"}
 
-                       :cljsbuild    {:builds
-                                      {:app
-                                       {:source-paths
-                                        ["env/dev/cljs"]
-                                        :compiler
-                                        {:output-dir "resources/public/js/out"
-                                         :source-map "resources/public/js/out.js.map"}}}}
-                       :injections   [(use 'aprint.core)]}
+                          :cljsbuild    {:builds
+                                         {:app
+                                          {:source-paths
+                                           ["env/dev/cljs"]
+                                           :compiler
+                                           {:output-dir "resources/public/js/out"
+                                            :source-map "resources/public/js/out.js.map"}}}}
+                          :injections   [(use 'aprint.core)]}
 
-             :uberjar {:auto-clean  false
-                       :main        fusure.core
-                       :aot         [fusure.core]
-                       :omit-source false
-                       :env         {:production true
-                                     :is-dev     false
-                                     :http-port  "4000"}
-                       :cljsbuild   {:builds
-                                     {:app
-                                      {:source-paths ["env/prod/cljs"]
-                                       :compiler     {:optimizations :advanced
-                                                      :pretty-print  false}}}}}}
+             :production {:auto-clean  false
+                          :hooks       [leiningen.cljsbuild]
+                          :main        fusure.core
+                          :aot         [fusure.core]
+                          :omit-source false
+                          :env         {:production true
+                                        :is-dev     false
+                                        :http-port  "4000"}
+                          :cljsbuild   {:builds
+                                        {:app
+                                         {:source-paths ["env/prod/cljs"]
+                                          :compiler     {:optimizations :advanced
+                                                         :pretty-print  false}}}}}}
   :ring {:handler fusure.core/app}
 
-  :main        fusure.core
+  :main fusure.core
 
   :jvm-opts ["-XX:-OmitStackTraceInFastThrow"])
