@@ -67,7 +67,6 @@
                           :injections   [(use 'aprint.core)]}
 
              :production {:auto-clean  false
-                          :hooks       [leiningen.cljsbuild]
                           :main        fusure.core
                           :aot         [fusure.core]
                           :omit-source false
