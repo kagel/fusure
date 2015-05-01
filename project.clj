@@ -47,7 +47,14 @@
                                  {:file     "resources/public/vendor/js/bootstrap.js"
                                   :file-min "resources/public/vendor/js/bootstrap.min.js"
                                   :provides ["cljsjs.bootstrap"]
-                                  :requires ["cljsjs.jquery"]}]
+                                  :requires ["cljsjs.jquery"]}
+                                 {:file     "resources/public/vendor/js/lastfm.api.cache.js"
+                                  :provides ["cljsjs.lastfm.cache"]}
+                                 {:file     "resources/public/vendor/js/lastfm.api.md5.js"
+                                  :provides ["cljsjs.lastfm.md5"]}
+                                 {:file     "resources/public/vendor/js/lastfm.api.js"
+                                  :provides ["cljsjs.lastfm.api"]
+                                  :requires ["cljsjs.lastfm.md5"]}]
                  :externs       ["resources/public/vendor/js/jquery-1.9.0.ext.js"]
                  :optimizations :none
                  :pretty-print  true}}}}
