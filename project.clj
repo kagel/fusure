@@ -48,6 +48,8 @@
                                   :file-min "resources/public/vendor/js/bootstrap.min.js"
                                   :provides ["cljsjs.bootstrap"]
                                   :requires ["cljsjs.jquery"]}
+                                 {:file     "resources/public/vendor/js/musicbrainz.js"
+                                  :provides ["cljsjs.musicbrainz"]}
                                  {:file     "resources/public/vendor/js/lastfm.api.cache.js"
                                   :provides ["cljsjs.lastfm.cache"]}
                                  {:file     "resources/public/vendor/js/lastfm.api.md5.js"
