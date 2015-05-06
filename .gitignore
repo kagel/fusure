@@ -1,5 +1,6 @@
 pom.xml
 pom.xml.asc
+fusure.iml
 *jar
 /lib/
 /classes/
@@ -9,4 +10,7 @@ pom.xml.asc
 .lein-repl-history
 .lein-plugins/
 .lein-failures
+.nrepl-port
+.idea
+.lein-env
 .nrepl-port
