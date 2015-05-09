@@ -53,4 +53,5 @@
                      (.log js/console (clj->js data)))))
 
 (defn audio-search [query]
-  (call "audio.search" {"q" query}))
+  (call "audio.search" {"q" query})
+  "")

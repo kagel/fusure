@@ -23,7 +23,8 @@
                  [aprint "0.1.3"]
                  [com.andrewmcveigh/cljs-time "0.3.2"]
                  [com.taoensso/sente "1.4.1"]
-                 [com.taoensso/carmine "2.9.2"]]
+                 [com.taoensso/carmine "2.9.2"]
+                 [cljsjs/fixed-data-table "0.1.2-2" :exclusions [cljsjs/react]]]
 
   :plugins [[lein-ring "0.8.13"]
             [lein-cljsbuild "1.0.5"]
@@ -48,6 +49,8 @@
                                   :file-min "resources/public/vendor/js/bootstrap.min.js"
                                   :provides ["cljsjs.bootstrap"]
                                   :requires ["cljsjs.jquery"]}
+                                 {:file     "resources/public/vendor/js/react-table.js"
+                                  :provides ["cljsjs.react-table"]}
                                  {:file     "resources/public/vendor/js/vk.js"
                                   :provides ["cljsjs.vk"]}
                                  {:file     "resources/public/vendor/js/musicbrainz.js"
