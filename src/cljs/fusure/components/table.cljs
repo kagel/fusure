@@ -1,18 +1,24 @@
 (ns fusure.components.table
+  (:require-macros [cljs.core.async.macros :refer (go)])
   (:require [om.core :as om :include-macros true]
             [sablono.core :refer-macros [html]]
-            [cljsjs.fixed-data-table]
-           ;[cljsjs.react-table]
-            ))
+            [fusure.state :refer [services-channel]]
+            [cljs.core.async :refer [<! >!]]
+            [cljsjs.fixed-data-table]))
 
 (def Table (js/React.createFactory js/FixedDataTable.Table))
 (def Column (js/React.createFactory js/FixedDataTable.Column))
 
 (defn getter [k row] (get row k))
 
-(defn table-view [{:keys [table]}]
-  (reify om/IRender
-    (render [_]
+(defn table-view [app owner _]
+  (reify
+    om/IWillMount
+    (will-mount [_]
+      (go (let [table (<! (services-channel app))]
+            (om/set-state! owner {:table table}))))
+    om/IRenderState
+    (render-state [_ {:keys [table]}]
       (html [:div (Table
                     #js {:width        600
                          :height       400
@@ -21,10 +27,6 @@
                          :rowsCount    (count table)
                          :headerHeight 30}
                     (Column
-                      #js {:label "Number" :dataKey 0 :cellDataGetter getter :width 100})
+                      #js {:label "Artist" :dataKey 0 :cellDataGetter getter :width 200})
                     (Column
-                      #js {:label "Amount" :dataKey 1 :cellDataGetter getter :width 100})
-                    (Column
-                      #js {:label "Coeff" :dataKey 2 :cellDataGetter getter :width 200})
-                    (Column
-                      #js {:label "Store" :dataKey 3 :cellDataGetter getter :width 200}))]))))
+                      #js {:label "Title" :dataKey 1 :cellDataGetter getter :width 400}))]))))
