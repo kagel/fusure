@@ -11,12 +11,13 @@
 
 (defn getter [k row] (get row k))
 
-(defn table-view [app owner _]
+(defn table-view [chan owner]
   (reify
     om/IWillMount
     (will-mount [_]
-      (go (let [table (<! (services-channel app))]
-            (om/set-state! owner {:table table}))))
+      (go (while true
+            (let [table (<! chan)]
+              (om/set-state! owner {:table table})))))
     om/IRenderState
     (render-state [_ {:keys [table]}]
       (html [:div (Table

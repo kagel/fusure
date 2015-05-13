@@ -59,12 +59,11 @@
   (let [data (:response (js->clj response))]
     (mapv (fn [{:keys [artist title]}]
             [artist title])
-          data)))
+          (drop 1 data))))
 
-(defn audio-search [app query]
+(defn audio-search [chan query]
   (call "audio.search"
         {"q" query "performer_only" 1}
         (fn [data]
-          (go (>! (services-channel app) (gen-table data)))
-          (.log js/console (clj->js data))))
-  "")
+          (go (>! chan (gen-table data)))
+          (.log js/console (clj->js data)))))
