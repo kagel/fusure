@@ -3,13 +3,14 @@
             [sablono.core :refer-macros [html]]
             [fusure.components.table :refer [table-view]]
             [fusure.components.search :refer [search-view]]
+            [fusure.components.vk-login :refer [vk-login-view]]
             [fusure.services.lastfm :refer [get-artist]]
             [fusure.services.musicbrainz :refer [search]]
             [fusure.services.alchemy :refer [entities]]
             [cljs.core.async :refer [chan]]
             [fusure.services.vk :refer [audio-search]]))
 
-(defn app-view [_]
+(defn app-view [state]
   (reify
     om/IInitState
     (init-state [_]
@@ -18,6 +19,7 @@
     (render-state [_ {:keys [chan]}]
       (html
         [:div.col-lg-4
+         (om/build vk-login-view state)
          (om/build search-view chan)
          (om/build table-view chan)
          (get-artist "The Ex")
