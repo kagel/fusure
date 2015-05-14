@@ -82,7 +82,7 @@
 
              :production {:auto-clean  false
                           :main        fusure.core
-                          :aot         [fusure.core]
+                          :aot         :all
                           :omit-source false
                           :env         {:production true
                                         :is-dev     false
@@ -90,8 +90,8 @@
                           :cljsbuild   {:builds
                                         {:app
                                          {:source-paths ["env/prod/cljs"]
-                                          :compiler     {:optimizations :advanced
-                                                         :pretty-print  false}}}}}}
+                                          :compiler     {:optimizations :whitespace
+                                                         :pretty-print  true}}}}}}
   :ring {:handler fusure.core/app}
 
   :main fusure.core
