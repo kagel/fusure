@@ -1,15 +1,21 @@
 (ns fusure.components.table
   (:require-macros [cljs.core.async.macros :refer (go)])
   (:require [om.core :as om :include-macros true]
+            [fusure.components.play :refer [play-view]]
             [sablono.core :refer-macros [html]]
             [fusure.state :refer [services-channel]]
-            [cljs.core.async :refer [<! >!]]
-            [cljsjs.fixed-data-table]))
+            [cljs.core.async :refer [<! >!]]))
 
-(def Table (js/React.createFactory js/FixedDataTable.Table))
-(def Column (js/React.createFactory js/FixedDataTable.Column))
-
-(defn getter [k row] (get row k))
+(defn table-row-view [row]
+  (reify
+    om/IRender
+    (render [_]
+      (let [[artist title url] row]
+        (html [:tr
+               [:td artist]
+               [:td title]
+               [:td {:style {:-webkit-user-select "none"}}
+                (om/build play-view {:url url})]])))))
 
 (defn table-view [chan owner]
   (reify
@@ -20,14 +26,7 @@
               (om/set-state! owner {:table table})))))
     om/IRenderState
     (render-state [_ {:keys [table]}]
-      (html [:div (Table
-                    #js {:width        600
-                         :height       400
-                         :rowHeight    30
-                         :rowGetter    #(get table %)
-                         :rowsCount    (count table)
-                         :headerHeight 30}
-                    (Column
-                      #js {:label "Artist" :dataKey 0 :cellDataGetter getter :width 200})
-                    (Column
-                      #js {:label "Title" :dataKey 1 :cellDataGetter getter :width 400}))]))))
+      (html [:div
+             [:table.table [:tbody
+                            (for [row table]
+                              (om/build table-row-view row))]]]))))

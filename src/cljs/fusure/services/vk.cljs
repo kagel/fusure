@@ -13,15 +13,16 @@
 (defn vk-login []
   (.. js/VK -Auth (login (fn [response]
                            (when (.-session response)
-                             (.log js/console "logged in"))))))
+                             (.log js/console "logged in")))
+                         8)))
 
 (defn vk-call [method params success error]
   (.. js/VK -Api (call method (clj->js params) success error)))
 
-(defn gen-table [response]
+(defn gen-table [response] p
   (let [data (:response (js->clj response :keywordize-keys true))]
-    (mapv (fn [{:keys [artist title]}]
-            [artist title])
+    (mapv (fn [{:keys [artist title url]}]
+            [artist title url])
           (drop 1 data))))
 
 (defn audio-search [chan query]
