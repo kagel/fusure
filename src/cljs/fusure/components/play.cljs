@@ -54,8 +54,9 @@
           (set-playback-status owner stop))))
     om/IRenderState
     (render-state [_ {:keys [chan playback]}]
-      (html [:div
+      (html [:button
              {:class   (get-in playback-controls [playback :class])
+              :style   {:font-size 36}
               :onClick (fn [_]
                          (go (>! chan :toggle-playback)))}
              [:audio {:preload "none" :ref "audio"}
