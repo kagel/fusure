@@ -6,7 +6,7 @@
             [fusure.state :refer [services-channel]]
             [cljs.core.async :refer [<! >!]]))
 
-(defn table-row-view [row]
+(defn table-track-view [row]
   (reify
     om/IRender
     (render [_]
@@ -17,7 +17,7 @@
                [:td {:style {:-webkit-user-select "none"}}
                 (om/build play-view {:url url})]])))))
 
-(defn table-view [chan owner]
+(defn tracks-table-view [chan owner]
   (reify
     om/IWillMount
     (will-mount [_]
@@ -29,4 +29,29 @@
       (html [:div
              [:table.table [:tbody
                             (for [row table]
-                              (om/build table-row-view row))]]]))))
+                              (om/build table-track-view row))]]]))))
+
+(defn table-artist-view [row]
+  (reify
+    om/IRender
+    (render [_]
+      (let [[name listeners mbid jw-distance] row]
+        (html [:tr
+               [:td name]
+               [:td listeners]
+               [:td {:style {:font-size 7}} mbid]
+               [:td jw-distance]])))))
+
+(defn artists-table-view [chan owner]
+  (reify
+    om/IWillMount
+    (will-mount [_]
+      (go (while true
+            (let [table (<! chan)]
+              (om/set-state! owner {:table table})))))
+    om/IRenderState
+    (render-state [_ {:keys [table]}]
+      (html [:div {:style {:font-size 9}}
+             [:table.table [:tbody
+                            (for [row table]
+                              (om/build table-artist-view row))]]]))))

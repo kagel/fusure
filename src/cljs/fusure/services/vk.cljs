@@ -19,7 +19,7 @@
 (defn vk-call [method params success error]
   (.. js/VK -Api (call method (clj->js params) success error)))
 
-(defn gen-table [response] p
+(defn gen-table [response]
   (let [data (:response (js->clj response :keywordize-keys true))]
     (mapv (fn [{:keys [artist title url]}]
             [artist title url])
