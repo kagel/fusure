@@ -25,13 +25,16 @@
                                                 (.log js/console code message))))))
 
 (defn gen-table [response query]
-  (let [data (-> (js->clj response :keywordize-keys true)
-                 (get-in [:results :artistmatches :artist]))]
+  (let [data     (-> (js->clj response :keywordize-keys true)
+                     (get-in [:results :artistmatches :artist]))
+        query-lc (.toLowerCase query)]
     (sort-by first (fn [left right]
-                     (> (jaro-winkler left query)
-                        (jaro-winkler right query)))
+                     (let [left-lc  (.toLowerCase left)
+                           right-lc (.toLowerCase right)]
+                       (> (jaro-winkler left-lc query-lc)
+                          (jaro-winkler right-lc query-lc))))
              (mapv (fn [{:keys [name listeners mbid]}]
-                     [name listeners mbid (jaro-winkler name query)])
+                     [name listeners mbid (jaro-winkler (.toLowerCase name) query-lc)])
                    data))))
 
 (defn find-artist [chan name]
