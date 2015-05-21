@@ -2,6 +2,7 @@
   (:require-macros [cljs.core.async.macros :refer (go)])
   (:require [om.core :as om :include-macros true]
             [fusure.components.play :refer [play-view]]
+            [fusure.services.vk :refer [audio-search]]
             [sablono.core :refer-macros [html]]
             [fusure.state :refer [services-channel]]
             [cljs.core.async :refer [<! >!]]))
@@ -42,13 +43,15 @@
                [:td {:style {:font-size 7}} mbid]
                [:td jw-distance]])))))
 
-(defn artists-table-view [chan owner]
+(defn artists-table-view [{:keys [artists-chan tracks-chan]} owner]
   (reify
     om/IWillMount
     (will-mount [_]
       (go (while true
-            (let [table (<! chan)]
-              (om/set-state! owner {:table table})))))
+            (let [table (<! artists-chan)]
+              (do
+                (audio-search tracks-chan (first (first table)))
+                (om/set-state! owner {:table table}))))))
     om/IRenderState
     (render-state [_ {:keys [table]}]
       (html [:div {:style {:font-size 9}}
