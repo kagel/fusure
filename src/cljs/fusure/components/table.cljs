@@ -36,7 +36,7 @@
   (reify
     om/IRender
     (render [_]
-      (let [[name listeners mbid jw-distance] row]
+      (let [{:keys [name listeners mbid jw-distance]} row]
         (html [:tr
                [:td name]
                [:td listeners]
@@ -50,7 +50,7 @@
       (go (while true
             (let [table (<! artists-chan)]
               (do
-                (audio-search tracks-chan (first (first table)))
+                (audio-search tracks-chan (-> table first :name))
                 (om/set-state! owner {:table table}))))))
     om/IRenderState
     (render-state [_ {:keys [table]}]

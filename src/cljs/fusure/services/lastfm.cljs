@@ -28,14 +28,18 @@
   (let [data     (-> (js->clj response :keywordize-keys true)
                      (get-in [:results :artistmatches :artist]))
         query-lc (.toLowerCase query)]
-    (sort-by first (fn [left right]
+    (sort-by :name (fn [left right]
                      (let [left-lc  (.toLowerCase left)
                            right-lc (.toLowerCase right)]
                        (> (jaro-winkler left-lc query-lc)
                           (jaro-winkler right-lc query-lc))))
-             (mapv (fn [{:keys [name listeners mbid]}]
-                     [name listeners mbid (jaro-winkler (.toLowerCase name) query-lc)])
-                   data))))
+             (->> (mapv (fn [{:keys [name listeners mbid]}]
+                          {:name        name
+                           :listeners   listeners
+                           :mbid        mbid
+                           :jw-distance (jaro-winkler (.toLowerCase name) query-lc)})
+                        data)
+                  (filter (fn [x] (> (:jw-distance x) 0.7)))))))
 
 (defn find-artist [chan name]
   (go
