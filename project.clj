@@ -8,13 +8,15 @@
   :source-paths ["src/clj" "src/cljs"]
 
   :dependencies [[org.clojure/clojure "1.7.0"]
-                 [org.clojure/clojurescript "1.7.189"]
-                 [org.clojure/core.async "0.2.374"]
+                 [org.clojure/clojurescript "1.7.170"]
+                 [org.clojure/core.async "0.2.374" :exclusions [org.clojure/tools.reader]]
                  [ring "1.4.0"]
                  [ring/ring-defaults "0.1.5"]
                  [compojure "1.4.0"]
                  [enlive "1.1.6"]
                  [org.omcljs/om "0.9.0"]
+                 [cljsjs/react-dom "0.14.3-1"]
+                 [cljsjs/react-dom-server "0.14.3-0"]
                  [environ "1.0.1"]
                  [reloaded.repl "0.2.1"]
                  [com.taoensso/timbre "4.1.4"]
@@ -22,15 +24,18 @@
                  [ankha "0.1.5.1-479897"]
                  [aprint "0.1.3"]
                  [com.andrewmcveigh/cljs-time "0.3.14"]
-                 [com.taoensso/sente "1.6.0"]
-                 [com.taoensso/carmine "2.12.1"]
+                 [com.taoensso/sente "1.6.0" :exclusions [io.aviso/pretty]]
+                 [com.taoensso/carmine "2.12.1" :exclusions [com.taoensso/ctrl
+                                                             com.taoensso/encore
+                                                             org.clojure/tools.reader
+                                                             com.taoensso/ctrl]]
                  [cljsjs/fixed-data-table "0.4.6-0" :exclusions [cljsjs/react]]]
 
-  :plugins [[lein-ring "0.8.13"]
-            [lein-cljsbuild "1.0.5"]
+  :plugins [[lein-ring "0.9.7"]
+            [lein-cljsbuild "1.1.1" :exclusions [org.clojure/clojure]]
             [lein-environ "1.0.0"]
-            [lein-kibit "0.1.2"]
-            [lein-ancient "0.6.3" :exclusions [org.clojure/clojure]]
+            [lein-kibit "0.1.2" :exclusions [org.clojure/clojure]]
+            [lein-ancient "0.6.8" :exclusions [org.clojure/clojure]]
             [lein-pprint "1.1.1" :exclusions [org.clojure/clojure]]]
 
   :min-lein-version "2.5.0"
