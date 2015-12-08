@@ -5,7 +5,8 @@
                                              artists-table-view]]
             [fusure.components.search :refer [search-view]]
             [fusure.components.vk-login :refer [vk-login-view]]
-            [fusure.services.lastfm :refer [get-artist]]
+            [fusure.components.lastfm-login :refer [lastfm-login-view]]
+            [fusure.services.lastfm :refer [get-artist login]]
             [fusure.services.alchemy :refer [entities]]
             [cljs.core.async :refer [chan]]
             [fusure.services.vk :refer [audio-search]]))
@@ -21,6 +22,7 @@
       (html
         [:div.col-lg-4
          (om/build vk-login-view state)
+         (om/build lastfm-login-view state)
          (om/build search-view {:artists-chan artists-chan})
          (om/build artists-table-view {:artists-chan artists-chan
                                        :tracks-chan  tracks-chan})

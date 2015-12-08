@@ -3,9 +3,8 @@
             [sablono.core :refer-macros [html]]
             [fusure.components.table :refer [tracks-table-view]]
             [fusure.services.lastfm :refer [find-artist]]
-            [fusure.services.musicbrainz :refer [search]]))
-
-(defn enter? [event] (= 13 (.-keyCode event)))
+            [fusure.services.musicbrainz :refer [search]]
+            [fusure.utils.common :refer [enter?]]))
 
 (defn search-view [{:keys [artists-chan]} owner]
   (reify om/IRender
