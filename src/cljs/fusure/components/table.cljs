@@ -16,7 +16,7 @@
                [:td artist]
                [:td title]
                [:td {:style {:-webkit-user-select "none"}}
-                (om/build play-view {:url url})]])))))
+                (om/build play-view {:url url :artist artist :title title})]])))))
 
 (defn tracks-table-view [chan owner]
   (reify

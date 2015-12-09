@@ -2,7 +2,9 @@
   (:require-macros [cljs.core.async.macros :refer (go)])
   (:require [om.core :as om]
             [cljs.core.async :refer [<! >! chan]]
-            [sablono.core :refer-macros [html]]))
+            [sablono.core :refer-macros [html]]
+            [fusure.services.lastfm :refer [submit-scrobble]]
+            [fusure.state :as state]))
 
 (defn start [audio]
   (.load audio)
@@ -29,12 +31,16 @@
 (defn set-playback-status [owner status]
   (om/set-state! owner :playback (->> (om/get-node owner "audio")
                                       (status))))
-(defn toggle-playback [owner]
-  (let [playback (om/get-state owner :playback)
-        toggle   (get-in playback-controls [playback :toggle])]
-    (set-playback-status owner toggle)))
 
-(defn play-view [{:keys [url]} owner]
+(defn toggle-playback [owner url artist title]
+  (let [playback (om/get-state owner :playback)
+        toggle (get-in playback-controls [playback :toggle])]
+    (set-playback-status owner toggle)
+    (let [last-scrobble (state/last-scrobble)]
+      (if (or (nil? last-scrobble) (not= last-scrobble url))
+        (submit-scrobble url artist "" title 0)))))
+
+(defn play-view [{:keys [url artist title]} owner]
   (reify
     om/IInitState
     (init-state [_]
@@ -46,7 +52,7 @@
         (go (while true
               (let [msg (<! chan)]
                 (when (= msg :toggle-playback)
-                  (toggle-playback owner)))))))
+                  (toggle-playback owner url artist title)))))))
     om/IWillReceiveProps
     (will-receive-props [_ {:keys [url]}]
       (let [new-url (:url (om/get-props owner))]
