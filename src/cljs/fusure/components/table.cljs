@@ -4,33 +4,36 @@
             [fusure.components.play :refer [play-view]]
             [fusure.services.vk :refer [audio-search]]
             [sablono.core :refer-macros [html]]
-            [fusure.state :refer [services-channel]]
+            [fusure.state :refer [services-channel scrobbles]]
             [cljs.core.async :refer [<! >!]]))
 
-(defn table-track-view [row]
+(defn table-track-view [{:keys [row scrobbles]}]
   (reify
     om/IRender
     (render [_]
       (let [[artist title url] row]
         (html [:tr
+               {:style {:background-color
+                        (if (contains? scrobbles url) "#ebffeb" "white")}}
                [:td artist]
                [:td title]
                [:td {:style {:-webkit-user-select "none"}}
                 (om/build play-view {:url url :artist artist :title title})]])))))
 
-(defn tracks-table-view [chan owner]
-  (reify
-    om/IWillMount
-    (will-mount [_]
-      (go (while true
-            (let [table (<! chan)]
-              (om/set-state! owner {:table table})))))
-    om/IRenderState
-    (render-state [_ {:keys [table]}]
-      (html [:div
-             [:table.table [:tbody
-                            (for [row table]
-                              (om/build table-track-view row))]]]))))
+(defn tracks-table-view [{:keys [chan state]} owner]
+  (let [{:keys [scrobbles]} state]
+    (reify
+      om/IWillMount
+      (will-mount [_]
+        (go (while true
+              (let [table (<! chan)]
+                (om/set-state! owner {:table table})))))
+      om/IRenderState
+      (render-state [_ {:keys [table]}]
+        (html [:div
+               [:table.table [:tbody
+                              (for [row table]
+                                (om/build table-track-view {:row row :scrobbles scrobbles}))]]])))))
 
 (defn table-artist-view [row]
   (reify

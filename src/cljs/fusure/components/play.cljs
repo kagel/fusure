@@ -1,7 +1,6 @@
 (ns fusure.components.play
   (:require-macros [cljs.core.async.macros :refer (go)])
   (:require [om.core :as om]
-            [cljs.core.async :refer [<! >! chan]]
             [sablono.core :refer-macros [html]]
             [fusure.services.lastfm :refer [submit-scrobble]]
             [fusure.state :as state]))
@@ -44,26 +43,19 @@
   (reify
     om/IInitState
     (init-state [_]
-      {:chan     (chan)
-       :playback :stopped})
-    om/IWillMount
-    (will-mount [_]
-      (let [chan (om/get-state owner :chan)]
-        (go (while true
-              (let [msg (<! chan)]
-                (when (= msg :toggle-playback)
-                  (toggle-playback owner url artist title)))))))
+      {:playback :stopped})
     om/IWillReceiveProps
     (will-receive-props [_ {:keys [url]}]
       (let [new-url (:url (om/get-props owner))]
         (when (not= new-url url)
           (set-playback-status owner stop))))
     om/IRenderState
-    (render-state [_ {:keys [chan playback]}]
+    (render-state [_ {:keys [playback]}]
       (html [:button
              {:class   (get-in playback-controls [playback :class])
               :style   {:font-size 36}
               :onClick (fn [_]
-                         (go (>! chan :toggle-playback)))}
+                         (go
+                           (toggle-playback owner url artist title)))}
              [:audio {:preload "none" :ref "audio"}
               [:source {:type "audio/mpeg" :src url}]]]))))

@@ -74,6 +74,7 @@
                                 (js-obj "key" (state/lastfm-session))
                                 (js-obj "success" (fn [data]
                                                     (.log js/console (str "Scrobble result: " data))
-                                                    (swap! state/app-state assoc-in state/last-scrobble-path url))
+                                                    (swap! state/app-state assoc-in state/last-scrobble-path url)
+                                                    (swap! state/app-state update-in state/scrobbles-path conj url))
                                         "error" (fn [code message]
                                                   (.log js/console code message)))))))

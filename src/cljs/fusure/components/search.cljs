@@ -1,7 +1,6 @@
 (ns fusure.components.search
   (:require [om.core :as om :include-macros true]
             [sablono.core :refer-macros [html]]
-            [fusure.components.table :refer [tracks-table-view]]
             [fusure.services.lastfm :refer [find-artist]]
             [fusure.services.musicbrainz :refer [search]]
             [fusure.utils.common :refer [enter?]]))

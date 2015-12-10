@@ -8,13 +8,15 @@
                 :config        nil
                 :table         nil
                 :services      {:lastfm {:session nil}}
-                :last-scrobble nil}))
+                :last-scrobble nil
+                :scrobbles     #{}}))
 
 (defn state [] @app-state)
 
 (def services-channel-path [:channels :services-channel])
 (def lastfm-session-path [:services :lastfm :session])
 (def last-scrobble-path [:last-scrobble])
+(def scrobbles-path [:scrobbles])
 (def pub-sub-path [:channels :pub-sub])
 
 (defn services-channel [app] (get-in app services-channel-path))
@@ -22,3 +24,4 @@
 
 (defn lastfm-session [] (get-in (state) lastfm-session-path))
 (defn last-scrobble [] (get-in (state) last-scrobble-path))
+(defn scrobbles [] (get-in (state) scrobbles-path))
